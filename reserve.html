@@ -101,14 +101,14 @@
 
             $.post(currentURL + "/api/tables", newReservation,
                 function (data) {
-
+                        console.log(data);
                     // If a table is available... tell user they are booked.
-                    if (data == true) {
+                    if (data.location === "seated") {
                         alert("Yay! You are officially booked!")
                     }
 
                     // If a table is available... tell user they on the waiting list.
-                    if (data == false) {
+                    if (data.location === "waitlist") {
                         alert("Sorry you are on the wait list")
                     }
 

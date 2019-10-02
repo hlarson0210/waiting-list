@@ -15,23 +15,11 @@ app.use(express.json());
 // Guests at the restaurant 
 // =============================================================
 var waitlist = [
-  {
-    routeName: "darthmaul",
-    name: "Waitlist",
-    role: "Sith Lord",
-    age: 200,
-    forcePoints: 1200
-  },
+ 
 ];
 
 var seated = [
-  {
-    routeName: "yoda",
-    name: "Seated",
-    role: "Jedi Master",
-    age: 900,
-    forcePoints: 2000
-  }
+
 ];
 
 // Routes
@@ -56,7 +44,7 @@ app.get("/api/waitlist", function(req, res) {
   return res.json(waitlist);
 });
 
-app.get("/api/seated", function(req, res) {
+app.get("/api/tables", function(req, res) {
   return res.json(seated);
 });
 
@@ -76,19 +64,26 @@ app.get("/api/characters/:character", function(req, res) {
 });
 
 // Create New Characters - takes in JSON input
-app.post("/api/characters", function(req, res) {
+app.post("/api/tables", function(req, res) {
   // req.body hosts is equal to the JSON post sent from the user
   // This works because of our body parsing middleware
   var newGuest = req.body;
 
   // Using a RegEx Pattern to remove spaces from newGuest
   // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newGuest.routeName = newGuest.name.replace(/\s+/g, "").toLowerCase();
+  newGuest.routeName = newGuest.customerName.replace(/\s+/g, "").toLowerCase();
 
   console.log(newGuest);
 
-  characters.push(newGuest);
+  if (seated.length < 5){
+    newGuest.location = "seated";
+    seated.push(newGuest);
+  } else {
+    newGuest.location = "waitlist";
+    waitlist.push(newGuest);
+  }
 
+  // This is what is sent back to the post callback on the reserve.html page. This essentially becomes the "data" parameter in that call back.
   res.json(newGuest);
 });
 
